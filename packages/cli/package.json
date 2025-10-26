@@ -1,0 +1,20 @@
+{
+  "name": "@taskedo/cli",
+  "version": "0.1.0",
+  "description": "Taskedo CLI for task management and provisioning",
+  "type": "module",
+  "bin": {
+    "taskedo": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@taskedo/common": "file:../common",
+    "commander": "^12.1.0"
+  }
+}

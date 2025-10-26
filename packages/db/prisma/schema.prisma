@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TaskType {
+  url
+}
+
+enum TaskRunStatus {
+  queued
+  running
+  succeeded
+  failed
+  cancelled
+}
+
+enum BackfillPolicy {
+  ascending
+  descending
+}
+
+model Tenant {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  tasks     Task[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id                String         @id @default(cuid())
+  tenantId          String
+  tenant            Tenant         @relation(fields: [tenantId], references: [id])
+  name              String
+  type              TaskType
+  targetUrl         String
+  cronSchedule      String
+  beginDate         DateTime?
+  backfillLimit     Int            @default(0)
+  taskTimeoutSec    Int            @default(900)
+  stopOnError       Boolean        @default(true)
+  maxParallelRuns   Int            @default(1)
+  backfillPolicy    BackfillPolicy @default(descending)
+  dependencies      TaskDependency[]
+  runs              TaskRun[]
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  pausedUntil       DateTime?
+  lastEnqueuedAt    DateTime?
+  lastRunStatus     TaskRunStatus? @default(queued)
+  retryAvailableAt  DateTime?
+
+  @@unique([tenantId, name])
+}
+
+model TaskDependency {
+  id             String   @id @default(cuid())
+  tenantId       String
+  taskId         String
+  task           Task     @relation(fields: [taskId], references: [id])
+  upstreamTaskId String
+  upstreamTask   Task     @relation("UpstreamTask", fields: [upstreamTaskId], references: [id])
+  policy         Json
+  createdAt      DateTime @default(now())
+
+  @@unique([taskId, upstreamTaskId])
+}
+
+model TaskRun {
+  id             String        @id @default(cuid())
+  tenantId       String
+  taskId         String
+  task           Task          @relation(fields: [taskId], references: [id])
+  scheduledTime  DateTime
+  startedAt      DateTime?
+  finishedAt     DateTime?
+  status         TaskRunStatus @default(queued)
+  attempt        Int           @default(0)
+  payload        Json?
+  lastError      String?
+  lockOwner      String?
+  lockedAt       DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@unique([taskId, scheduledTime])
+  @@index([tenantId, status])
+  @@index([tenantId, scheduledTime])
+}
+
+model SchedulerLock {
+  id        String   @id
+  owner     String?
+  expiresAt DateTime?
+  updatedAt DateTime @updatedAt
+}

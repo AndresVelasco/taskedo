@@ -1,0 +1,43 @@
+{
+  "name": "taskedo",
+  "version": "0.1.0",
+  "description": "Taskedo monorepo: API, scheduler, CLI, and shared packages",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npm run -ws build",
+    "dev": "npm run -w packages/api dev",
+    "lint": "eslint \"packages/**/*.{ts,tsx}\"",
+    "test": "vitest --run"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndresVelasco/taskedo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "prettier": "^3.3.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.2",
+    "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "pino": "^9.3.2",
+    "zod": "^3.23.8"
+  }
+}

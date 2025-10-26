@@ -1,0 +1,21 @@
+{
+  "name": "@taskedo/db",
+  "version": "0.1.0",
+  "description": "Database schema and client for Taskedo",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "generate": "prisma generate",
+    "migrate": "prisma migrate dev",
+    "format": "prisma format",
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.21.1",
+    "@taskedo/common": "file:../common"
+  },
+  "devDependencies": {
+    "prisma": "^5.21.1"
+  }
+}

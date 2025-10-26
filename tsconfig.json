@@ -1,0 +1,27 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/common"
+    },
+    {
+      "path": "./packages/api"
+    },
+    {
+      "path": "./packages/scheduler"
+    },
+    {
+      "path": "./packages/cloud"
+    },
+    {
+      "path": "./packages/cli"
+    },
+    {
+      "path": "./packages/db"
+    }
+  ]
+}
